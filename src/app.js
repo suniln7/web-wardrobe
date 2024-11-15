@@ -32,15 +32,14 @@ app.get('/', (req, res) => {
 
 // Handle POST request for file uploads
 app.post('/upload', upload.fields([{ name: 'topwearImages', maxCount: 10 }, { name: 'bottomwearImages', maxCount: 10 }]), (req, res) => {
-  if (!req.files || req.files.topwearImages.length < 1 || req.files.bottomwearImages.length < 1) {
+  if (!req.files || !req.files.topwearImages || !req.files.bottomwearImages) {
     return res.status(400).send('Please upload at least one topwear and one bottomwear image.');
   }
 
-  // Get the uploaded images' file paths
+  // Send back file paths for both topwear and bottomwear images
   const topwearImages = req.files.topwearImages.map(file => `/images/${file.filename}`);
   const bottomwearImages = req.files.bottomwearImages.map(file => `/images/${file.filename}`);
-
-  // Send back the images as a JSON response
+  
   res.json({ topwearImages, bottomwearImages });
 });
 
