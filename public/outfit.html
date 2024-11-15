@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Outfit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+    }
+    .outfit-container {
+      text-align: center;
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+    img {
+      width: 80%;
+      max-width: 350px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="outfit-container">
+    <h1>Your Outfit</h1>
+    <div id="outfitImages">
+      <!-- The images will be injected here by JavaScript -->
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2024 Clothing Pairing Web App. All Rights Reserved.</p>
+  </div>
+
+  <script>
+    // Get the image URLs from the query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const topwear = urlParams.get('topwear');
+    const bottomwear = urlParams.get('bottomwear');
+
+    // Add the images to the page
+    if (topwear && bottomwear) {
+      const outfitContainer = document.getElementById('outfitImages');
+      const topwearImg = document.createElement('img');
+      topwearImg.src = topwear;
+      outfitContainer.appendChild(topwearImg);
+
+      const bottomwearImg = document.createElement('img');
+      bottomwearImg.src = bottomwear;
+      outfitContainer.appendChild(bottomwearImg);
+    }
+  </script>
+
+</body>
+</html>

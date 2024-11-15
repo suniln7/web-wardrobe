@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clothing Pairing Web App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #5f6368;
+      text-align: center;
+      margin-bottom: 40px;
+      font-weight: 600;
+    }
+    h3 {
+      font-size: 1.2rem;
+      color: #444;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    form {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 40px;
+    }
+    input[type="file"] {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 15px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    input[type="file"]:hover {
+      border-color: #bbb;
+    }
+    button {
+      background-color: #6c63ff;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #5a4ae3;
+    }
+    #pairings {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    #pairingImages {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+    img {
+      width: 80%;
+      max-width: 350px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin: 10px 0;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .container {
+      text-align: center;
+      margin: 40px 0;
+    }
+    .footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Clothing Pairing Web App</h1>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+      <h3>Upload Topwear Image</h3>
+      <input type="file" id="topwear" name="topwear" required />
+      
+      <h3>Upload Bottomwear Image</h3>
+      <input type="file" id="bottomwear" name="bottomwear" required />
+
+      <button type="submit">Upload Images</button>
+    </form>
+
+    <div id="pairings">
+      <h3>Clothing Pairing:</h3>
+      <div id="pairingImages"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2024 Clothing Pairing Web App. All Rights Reserved.</p>
+  </div>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const formData = new FormData();
+      formData.append('clothingImages', document.getElementById('topwear').files[0]);
+      formData.append('clothingImages', document.getElementById('bottomwear').files[0]);
+
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        const pairingImagesDiv = document.getElementById('pairingImages');
+        pairingImagesDiv.innerHTML = ''; // Clear previous images
+        data.images.forEach(image => {
+          const img = document.createElement('img');
+          img.src = image;
+          pairingImagesDiv.appendChild(img);
+        });
+      })
+      .catch(err => {
+        console.error('Error:', err);
+      });
+    });
+  </script>
+
+</body>
+</html>
