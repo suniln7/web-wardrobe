@@ -16,12 +16,22 @@
       align-items: center;
       min-height: 100vh;
       color: #333;
+      position: relative;
     }
-    .container {
-      text-align: center;
+
+    /* Style for the upload form positioned in the top-left */
+    .upload-container {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      max-width: 350px;
       width: 100%;
-      max-width: 500px;
     }
+
     h1 {
       font-size: 2.5rem;
       color: #5f6368;
@@ -29,12 +39,14 @@
       margin-bottom: 40px;
       font-weight: 600;
     }
+
     h3 {
       font-size: 1.2rem;
       color: #444;
       margin-bottom: 10px;
       font-weight: 600;
     }
+
     form {
       background: white;
       border-radius: 8px;
@@ -43,6 +55,7 @@
       width: 100%;
       margin-bottom: 40px;
     }
+
     input[type="file"] {
       display: block;
       width: 100%;
@@ -52,6 +65,7 @@
       border-radius: 5px;
       font-size: 1rem;
     }
+
     button {
       background-color: #6c63ff;
       color: white;
@@ -62,32 +76,38 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
+
     button:hover {
       background-color: #5a4ae3;
     }
+
+    /* Styling for the pairings section and cards */
     #pairingCards {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 100px;  /* Push the pairing cards down a little */
     }
+
     .card {
       background: white;
       border-radius: 8px;
-      padding: 20px;
+      padding: 15px;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
+      width: 90%;
+      max-width: 300px; /* Smaller card */
       margin-bottom: 20px;
       text-align: center;
     }
+
     .card img {
       width: 100%;
-      max-width: 300px;
+      max-width: 250px;  /* Resize the images inside the cards */
       margin: 10px 0;
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
+
     .footer {
       position: fixed;
       bottom: 10px;
@@ -100,7 +120,7 @@
 </head>
 <body>
 
-  <div class="container">
+  <div class="upload-container">
     <h1>Clothing Pairing Web App</h1>
 
     <form id="uploadForm" enctype="multipart/form-data">
@@ -112,11 +132,11 @@
 
       <button type="submit">Upload Images</button>
     </form>
-
-    <div id="pairingCards"></div>
-
-    <button id="nextPairButton" style="display:none;">Next Pair</button>
   </div>
+
+  <div id="pairingCards"></div>
+
+  <button id="nextPairButton" style="display:none;">Next Pair</button>
 
   <div class="footer">
     <p>&copy; 2024 Clothing Pairing Web App. All Rights Reserved.</p>
