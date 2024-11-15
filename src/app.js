@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const sharp = require('sharp'); // Import sharp for image resizing
 const app = express();
 const port = 3000;
 
@@ -32,33 +31,17 @@ app.get('/', (req, res) => {
 });
 
 // Handle POST request for file uploads
-app.post('/upload', upload.array('clothingImages', 2), async (req, res) => {
-  if (!req.files || req.files.length < 2) {
+app.post('/upload', upload.fields([{ name: 'topwearImages', maxCount: 10 }, { name: 'bottomwearImages', maxCount: 10 }]), (req, res) => {
+  if (!req.files || req.files.topwearImages.length < 1 || req.files.bottomwearImages.length < 1) {
     return res.status(400).send('Please upload at least one topwear and one bottomwear image.');
   }
 
-  try {
-    const resizedImages = [];
-    for (const file of req.files) {
-      // Resize image to 400px wide (height auto to maintain aspect ratio)
-      const resizedImagePath = `./public/images/resized_${file.filename}`;
-      await sharp(file.path)
-        .resize(400) // Resize to 400px width
-        .toFile(resizedImagePath);
+  // Get the uploaded images' file paths
+  const topwearImages = req.files.topwearImages.map(file => `/images/${file.filename}`);
+  const bottomwearImages = req.files.bottomwearImages.map(file => `/images/${file.filename}`);
 
-      // Add the resized image path to the response
-      resizedImages.push(`/images/${path.basename(resizedImagePath)}`);
-      
-      // Delete the original uploaded file to save space
-      fs.unlinkSync(file.path);
-    }
-
-    // Return the paths of the resized images
-    res.json({ images: resizedImages });
-  } catch (err) {
-    console.error('Error resizing images:', err);
-    res.status(500).send('Server error while processing the images.');
-  }
+  // Send back the images as a JSON response
+  res.json({ topwearImages, bottomwearImages });
 });
 
 // Start the server

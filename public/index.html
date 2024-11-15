@@ -48,9 +48,6 @@
       border-radius: 5px;
       font-size: 1rem;
     }
-    input[type="file"]:hover {
-      border-color: #bbb;
-    }
     button {
       background-color: #6c63ff;
       color: white;
@@ -64,33 +61,37 @@
     button:hover {
       background-color: #5a4ae3;
     }
-    #pairings {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    #pairingImages {
+    .card-container {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 40px;
     }
-    img {
-      width: 80%;
-      max-width: 350px;
-      border-radius: 10px;
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100%;
+      max-width: 250px;
+    }
+    .card img {
+      width: 100%;
+      max-width: 200px;
+      border-radius: 8px;
+      margin-bottom: 15px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      margin: 10px 0;
       transition: transform 0.3s, box-shadow 0.3s;
     }
-    img:hover {
+    .card img:hover {
       transform: scale(1.05);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-    .container {
-      text-align: center;
-      margin: 40px 0;
     }
     .footer {
       position: fixed;
@@ -108,19 +109,18 @@
     <h1>Clothing Pairing Web App</h1>
 
     <form id="uploadForm" enctype="multipart/form-data">
-      <h3>Upload Topwear Image</h3>
-      <input type="file" id="topwear" name="topwear" required />
+      <h3>Upload Topwear Images</h3>
+      <input type="file" id="topwear" name="topwearImages" multiple required />
       
-      <h3>Upload Bottomwear Image</h3>
-      <input type="file" id="bottomwear" name="bottomwear" required />
+      <h3>Upload Bottomwear Images</h3>
+      <input type="file" id="bottomwear" name="bottomwearImages" multiple required />
 
       <button type="submit">Upload Images</button>
     </form>
 
-    <div id="pairings">
-      <h3>Clothing Pairing:</h3>
-      <div id="pairingImages"></div>
-    </div>
+    <div id="pairingCards" class="card-container"></div>
+
+    <button id="nextPairButton" style="display:none;">Next Pair</button>
   </div>
 
   <div class="footer">
@@ -132,8 +132,8 @@
       event.preventDefault();
 
       const formData = new FormData();
-      formData.append('clothingImages', document.getElementById('topwear').files[0]);
-      formData.append('clothingImages', document.getElementById('bottomwear').files[0]);
+      formData.append('topwearImages', document.getElementById('topwear').files[0]);
+      formData.append('bottomwearImages', document.getElementById('bottomwear').files[0]);
 
       fetch('/upload', {
         method: 'POST',
@@ -141,12 +141,42 @@
       })
       .then(response => response.json())
       .then(data => {
-        const pairingImagesDiv = document.getElementById('pairingImages');
-        pairingImagesDiv.innerHTML = ''; // Clear previous images
-        data.images.forEach(image => {
-          const img = document.createElement('img');
-          img.src = image;
-          pairingImagesDiv.appendChild(img);
+        const pairingCardsDiv = document.getElementById('pairingCards');
+        pairingCardsDiv.innerHTML = ''; // Clear any previous content
+
+        let allCombinations = [];
+        data.topwearImages.forEach(topImage => {
+          data.bottomwearImages.forEach(bottomImage => {
+            allCombinations.push({ topImage, bottomImage });
+          });
+        });
+
+        let currentIndex = 0;
+        function displayPair(index) {
+          pairingCardsDiv.innerHTML = ''; // Clear previous pair
+          const pair = allCombinations[index];
+          const card = document.createElement('div');
+          card.className = 'card';
+          
+          const topwearImg = document.createElement('img');
+          topwearImg.src = pair.topImage;
+          card.appendChild(topwearImg);
+          
+          const bottomwearImg = document.createElement('img');
+          bottomwearImg.src = pair.bottomImage;
+          card.appendChild(bottomwearImg);
+
+          pairingCardsDiv.appendChild(card);
+        }
+
+        // Display first pair
+        displayPair(currentIndex);
+
+        // Button to cycle through pairs
+        document.getElementById('nextPairButton').style.display = 'block';
+        document.getElementById('nextPairButton').addEventListener('click', function() {
+          currentIndex = (currentIndex + 1) % allCombinations.length;
+          displayPair(currentIndex);
         });
       })
       .catch(err => {
