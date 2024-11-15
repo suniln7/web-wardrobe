@@ -96,8 +96,8 @@
       border-radius: 8px;
       padding: 10px;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-      width: 85%;
-      max-width: 250px; /* Smaller card */
+      width: 80%;
+      max-width: 250px; /* Fixed card size */
       margin-bottom: 15px;
       text-align: center;
       display: flex;
@@ -108,7 +108,7 @@
     .card img {
       width: 100%;
       height: auto;
-      max-width: 180px;  /* Even smaller image */
+      max-width: 180px;  /* Fixed image size */
       margin: 5px 0;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -123,17 +123,22 @@
       color: #888;
     }
 
-    /* Making the "Next Pair" button smaller */
+    /* Styling for the "Next Pair" button */
     #nextPairButton {
-      margin-top: 15px;
+      margin-top: 20px;
       padding: 8px 15px;
       font-size: 0.9rem;
-      display: none;
       cursor: pointer;
       background-color: #4caf50;
       color: white;
       border: none;
       border-radius: 5px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    #nextPairButton:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
@@ -155,7 +160,7 @@
 
   <div id="pairingCards"></div>
 
-  <button id="nextPairButton">Next Pair</button>
+  <button id="nextPairButton" style="display:none;">Next Pair</button>
 
   <div class="footer">
     <p>&copy; 2024 Clothing Pairing Web App. All Rights Reserved.</p>
@@ -218,7 +223,7 @@
 
         // Show the next pair button and add click event listener
         const nextButton = document.getElementById('nextPairButton');
-        nextButton.style.display = 'block';
+        nextButton.style.display = 'inline-block';
         nextButton.addEventListener('click', function() {
           currentIndex = (currentIndex + 1) % allCombinations.length;
           displayPair(currentIndex);
