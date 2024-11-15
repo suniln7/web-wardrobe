@@ -172,9 +172,10 @@
         // Display first pair
         displayPair(currentIndex);
 
-        // Button to cycle through pairs
-        document.getElementById('nextPairButton').style.display = 'block';
-        document.getElementById('nextPairButton').addEventListener('click', function() {
+        // Show the next pair button and add click event listener
+        const nextButton = document.getElementById('nextPairButton');
+        nextButton.style.display = 'block';
+        nextButton.addEventListener('click', function() {
           currentIndex = (currentIndex + 1) % allCombinations.length;
           displayPair(currentIndex);
         });
