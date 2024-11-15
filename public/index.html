@@ -20,7 +20,6 @@
       flex-direction: column;
     }
 
-    /* Style for the upload form positioned in the top-left */
     .upload-container {
       position: absolute;
       top: 20px;
@@ -29,7 +28,7 @@
       border-radius: 8px;
       padding: 15px;
       box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-      width: 250px; /* Further reducing the width */
+      width: 250px;
     }
 
     h1 {
@@ -82,13 +81,17 @@
       background-color: #5a4ae3;
     }
 
-    /* Styling for the pairings section and cards */
-    #pairingCards {
+    /* Styling for the pairings section and slider */
+    #pairingSlider {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 50px;  /* Push the pairing cards down a little */
-      width: 100%;
+      overflow-x: scroll;
+      gap: 10px; /* Space between cards */
+      margin-top: 50px;
+      width: 80%;
+      padding: 10px;
+      scroll-behavior: smooth;
+      justify-content: center;
+      position: relative;
     }
 
     .card {
@@ -96,22 +99,31 @@
       border-radius: 8px;
       padding: 10px;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-      width: 80%;
-      max-width: 250px; /* Fixed card size */
-      margin-bottom: 15px;
+      width: 250px;
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      transition: transform 0.3s ease-in-out;
     }
 
     .card img {
       width: 100%;
       height: auto;
-      max-width: 180px;  /* Fixed image size */
+      max-width: 180px; /* Fixed image size */
       margin: 5px 0;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Scrollbar styles */
+    #pairingSlider::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    #pairingSlider::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
     }
 
     .footer {
@@ -123,23 +135,9 @@
       color: #888;
     }
 
-    /* Styling for the "Next Pair" button */
+    /* Hide "Next Pair" button, not needed anymore */
     #nextPairButton {
-      margin-top: 20px;
-      padding: 8px 15px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      display: inline-block;
-      text-align: center;
-      width: auto; /* Make the button only as wide as needed */
-    }
-
-    #nextPairButton:hover {
-      background-color: #45a049;
+      display: none;
     }
   </style>
 </head>
@@ -159,9 +157,7 @@
     </form>
   </div>
 
-  <div id="pairingCards"></div>
-
-  <button id="nextPairButton" style="display:none;">Next Pair</button>
+  <div id="pairingSlider"></div>
 
   <div class="footer">
     <p>&copy; 2024 Clothing Pairing Web App. All Rights Reserved.</p>
@@ -191,8 +187,8 @@
       })
       .then(response => response.json())
       .then(data => {
-        const pairingCardsDiv = document.getElementById('pairingCards');
-        pairingCardsDiv.innerHTML = ''; // Clear any previous content
+        const pairingSliderDiv = document.getElementById('pairingSlider');
+        pairingSliderDiv.innerHTML = ''; // Clear any previous content
 
         let allCombinations = [];
         data.topwearImages.forEach(topImage => {
@@ -201,33 +197,20 @@
           });
         });
 
-        let currentIndex = 0;
-        function displayPair(index) {
-          pairingCardsDiv.innerHTML = ''; // Clear previous pair
-          const pair = allCombinations[index];
+        // Display all combinations in a horizontal scrollable slider
+        allCombinations.forEach(pair => {
           const card = document.createElement('div');
           card.className = 'card';
-          
+
           const topwearImg = document.createElement('img');
           topwearImg.src = pair.topImage;
           card.appendChild(topwearImg);
-          
+
           const bottomwearImg = document.createElement('img');
           bottomwearImg.src = pair.bottomImage;
           card.appendChild(bottomwearImg);
 
-          pairingCardsDiv.appendChild(card);
-        }
-
-        // Display first pair
-        displayPair(currentIndex);
-
-        // Show the next pair button and add click event listener
-        const nextButton = document.getElementById('nextPairButton');
-        nextButton.style.display = 'inline-block';
-        nextButton.addEventListener('click', function() {
-          currentIndex = (currentIndex + 1) % allCombinations.length;
-          displayPair(currentIndex);
+          pairingSliderDiv.appendChild(card);
         });
       })
       .catch(err => {
