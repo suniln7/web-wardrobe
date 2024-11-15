@@ -23,15 +23,33 @@
       padding: 40px;
       border-radius: 8px;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      max-width: 500px;
+      max-width: 600px;
       width: 100%;
     }
-    img {
-      width: 80%;
-      max-width: 350px;
-      margin: 20px 0;
-      border-radius: 10px;
+    .card {
+      background: #fff;
+      border-radius: 8px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100%;
+    }
+    .card img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
     .footer {
       position: fixed;
@@ -65,13 +83,22 @@
     // Add the images to the page
     if (topwear && bottomwear) {
       const outfitContainer = document.getElementById('outfitImages');
+
+      // Create card for topwear
+      const topwearCard = document.createElement('div');
+      topwearCard.className = 'card';
       const topwearImg = document.createElement('img');
       topwearImg.src = topwear;
-      outfitContainer.appendChild(topwearImg);
+      topwearCard.appendChild(topwearImg);
+      outfitContainer.appendChild(topwearCard);
 
+      // Create card for bottomwear
+      const bottomwearCard = document.createElement('div');
+      bottomwearCard.className = 'card';
       const bottomwearImg = document.createElement('img');
       bottomwearImg.src = bottomwear;
-      outfitContainer.appendChild(bottomwearImg);
+      bottomwearCard.appendChild(bottomwearImg);
+      outfitContainer.appendChild(bottomwearCard);
     }
   </script>
 
